@@ -1,0 +1,8 @@
+#!/bin/sh ruby
+
+require 'sqlpp'
+
+sql = STDIN.read
+
+ast = SQLPP::Parser.parse(sql)
+puts SQLPP::Formatter.new.format(ast)
