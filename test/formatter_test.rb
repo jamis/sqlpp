@@ -31,11 +31,22 @@ ORDER BY z ASC
 SQL
   end
 
+  def test_format_wrap_projections
+    ast = _parser("select a, b, c, d from foo").parse
+    assert_equal <<-SQL, _format(ast, projections: :wrap)
+SELECT a,
+       b,
+       c,
+       d
+FROM foo
+    SQL
+  end
+
   def _parser(string)
     SQLPP::Parser.new(string)
   end
 
-  def _format(ast)
-    SQLPP::Formatter.new.format(ast)
+  def _format(ast, options={})
+    SQLPP::Formatter.new(options).format(ast)
   end
 end

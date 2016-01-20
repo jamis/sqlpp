@@ -4,5 +4,18 @@ require 'sqlpp'
 
 sql = STDIN.read
 
+if ARGV.grep(/^-[h?]$/).any?
+  puts "SQLPP (SQL Pretty Printer)"
+  puts
+  puts "Usage: #{$0} -h -? -wp < SQL"
+  puts
+  puts " -h or -?: this list of options"
+  puts " -wp: wrap the projection lists"
+  puts
+  exit
+end
+
+projections = ARGV.include?("-wp") ? :wrap : nil
+
 ast = SQLPP::Parser.parse(sql)
-puts SQLPP::Formatter.new.format(ast)
+puts SQLPP::Formatter.new(projections: projections).format(ast)

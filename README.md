@@ -11,12 +11,24 @@ sql = "..."
 ast = SQLPP::Parser.parse(sql)
 
 puts SQLPP::Formatter.new.format(ast)
+
+# or, to wrap projection lists...
+puts SQLPP::Formatter.new(projections: :wrap).format(ast)
 ```
 
 Or, you can use the included `bin/sqlpp` script to format SQL via STDIN:
 
 ```sh
-$ sqlpp < query.sql
+$ sqlpp -h
+SQLPP (SQL Pretty Printer)
+
+Usage: sqlpp -h -? -wp < SQL
+
+ -h or -?: this list of options
+ -wp: wrap the projection lists
+
+$ sqlpp -wp < query.sql
+...
 ```
 
 ## Output

@@ -1,8 +1,10 @@
 module SQLPP
   class Formatter
-    def initialize
+    def initialize(projections: nil)
       @indent = nil
       @state = nil
+
+      @projections = projections
     end
 
     def format(node)
@@ -20,8 +22,10 @@ module SQLPP
         output << "\n"
       end
 
-      output << "#{_indent}SELECT "
-      output << node.projections.map { |c| format(c) }.join(", ")
+      output << (select = "#{_indent}SELECT ")
+      link = ","
+      link << ((@projections == :wrap) ? "\n#{" " * select.length}" : " ")
+      output << node.projections.map { |c| format(c) }.join(link)
       output << "\n"
 
       if node.froms
