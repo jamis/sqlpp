@@ -41,7 +41,7 @@ class TokenizerTest < Minitest::Test
   end
 
   def test_it_should_recognize_identifiers
-    _setup_tokenizer "word word123 \"quoted word\" \"with \\\"escape\\\" word\""
+    _setup_tokenizer "word word123 \"quoted word\" \"with \\\"escape\\\" word\" `mysql word` `mysql \\`escape\\` word`"
 
     assert_token _next, type: :id, text: "word"
     _skip :space
@@ -50,6 +50,10 @@ class TokenizerTest < Minitest::Test
     assert_token _next, type: :id, text: '"quoted word"'
     _skip :space
     assert_token _next, type: :id, text: '"with \"escape\" word"'
+    _skip :space
+    assert_token _next, type: :id, text: '`mysql word`'
+    _skip :space
+    assert_token _next, type: :id, text: '`mysql \`escape\` word`'
   end
 
   def test_it_should_recognize_number_literals

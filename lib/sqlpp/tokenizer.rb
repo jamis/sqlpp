@@ -86,9 +86,9 @@ module SQLPP
         Token.new(:punct, punct, pos)
       elsif (punct = @scanner.scan(/[<>=\(\).*,\/+\-]/))
         Token.new(:punct, punct, pos)
-      elsif @scanner.scan(/"/)
-        contents = _scan_to_delim('"', pos)
-        Token.new(:id, "\"#{contents}\"", pos)
+      elsif (delim = @scanner.scan(/["`]/))
+        contents = _scan_to_delim(delim, pos)
+        Token.new(:id, "#{delim}#{contents}#{delim}", pos)
       elsif @scanner.scan(/'/)
         contents = _scan_to_delim("'", pos)
         Token.new(:lit, "'#{contents}'", pos)
@@ -100,14 +100,17 @@ module SQLPP
     end
 
     def _scan_to_delim(delim, pos)
+      escape, if_peek = case delim
+        when '"', '`' then ["\\", nil]
+        when "'" then ["'", "'"]
+      end
+
       string = ""
       loop do
         ch = @scanner.getch
 
-        if delim == '"' && ch == "\\"
+        if ch == escape && (if_peek.nil? || @scanner.peek(1) == if_peek)
           ch << @scanner.getch
-        elsif delim == "'" && ch == "'"
-          ch << @scanner.getch if @scanner.peek(1) == "'"
         end
 
         case ch
