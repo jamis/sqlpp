@@ -7,7 +7,7 @@ Gem::Specification.new do |gem|
   gem.name        = "sqlpp"
   gem.authors     = ["Jamis Buck"]
   gem.email       = ["jamis@jamisbuck.org"]
-  gem.homepage    = "http://github.com/jamis/sqlp"
+  gem.homepage    = "http://github.com/jamis/sqlpp"
   gem.summary     = "A simplistic SQL parser and pretty-printer"
   gem.description = "A simplistic SQL parser and pretty-printer"
   gem.license     = 'MIT'
