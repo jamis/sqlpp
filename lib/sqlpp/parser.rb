@@ -1,11 +1,14 @@
 require 'sqlpp/ast'
 
-# select := 'SELECT'
+# select := 'SELECT' optional_distinct
 #             optional_projections
 #             optional_froms
 #             optional_wheres
 #             optional_groups
 #             optional_orders
+#
+# optional_distinct := ''
+#                    | 'DISTINCT'
 #
 # optional_projections := ''
 #                       | list
@@ -67,7 +70,7 @@ require 'sqlpp/ast'
 #
 # op2 := '+' | '-' | '*' | '/'
 #
-# unary := '+' | '-' | 'NOT'
+# unary := '+' | '-' | 'NOT' | 'DISTINCT'
 #
 # expr4 := lit
 #        | id
@@ -133,6 +136,10 @@ module SQLPP
       select = AST::Select.new
 
       _eat :space
+      if _eat(:key, :distinct)
+        select.distinct = true
+        _eat :space
+      end
 
       if !_peek(:key, /^(from|where)$/) && !_peek(:eof)
         list = []
@@ -346,7 +353,7 @@ module SQLPP
     def _parse_expr3
       _eat :space
 
-      if (op = (_eat(:punct, /[-+]/) || _eat(:key, :not)))
+      if (op = (_eat(:punct, /[-+]/) || _eat(:key, /^(not|distinct)$/)))
         _eat :space
         AST::Unary.new(op.text, _parse_expr3)
 

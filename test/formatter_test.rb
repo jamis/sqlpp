@@ -42,6 +42,22 @@ FROM foo
     SQL
   end
 
+  def test_format_select_distinct
+    ast = _parser("select distinct a, b, c, d from foo").parse
+    assert_equal <<-SQL, _format(ast)
+SELECT DISTINCT a, b, c, d
+FROM foo
+    SQL
+  end
+
+  def test_format_count_distinct
+    ast = _parser("select count(distinct id) from foo").parse
+    assert_equal <<-SQL, _format(ast)
+SELECT count(DISTINCT id)
+FROM foo
+    SQL
+  end
+
   def _parser(string)
     SQLPP::Parser.new(string)
   end

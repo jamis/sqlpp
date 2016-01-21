@@ -1,6 +1,6 @@
 module SQLPP
   module AST
-    class Select < Struct.new(:projections, :froms, :wheres, :groups, :orders)
+    class Select < Struct.new(:projections, :froms, :wheres, :groups, :orders, :distinct)
     end
 
     class Expr < Struct.new(:left, :op, :right)

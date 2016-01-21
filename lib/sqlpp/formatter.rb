@@ -23,6 +23,7 @@ module SQLPP
       end
 
       output << (select = "#{_indent}SELECT ")
+      output << "DISTINCT " if node.distinct
       link = ","
       link << ((@projections == :wrap) ? "\n#{" " * select.length}" : " ")
       output << node.projections.map { |c| format(c) }.join(link)

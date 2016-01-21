@@ -179,6 +179,19 @@ class ParserTest < Minitest::Test
     end
   end
 
+  def test_it_should_parse_distinct_expression
+    expr = _parser("count(distinct id)").parse_expression
+    assert_instance_of SQLPP::AST::Atom, expr
+    assert_equal :func, expr.type
+    assert_equal 1, expr.right.count
+
+    assert_instance_of SQLPP::AST::Unary, expr.right[0]
+    assert_equal :distinct, expr.right[0].op
+    assert_instance_of SQLPP::AST::Atom, expr.right[0].expr
+    assert_equal :attr, expr.right[0].expr.type
+    assert_equal "id", expr.right[0].expr.left
+  end
+
   def test_from_should_recognize_single_attr
     from = _parser("x").parse_from
     assert_instance_of SQLPP::AST::Atom, from
@@ -267,6 +280,12 @@ class ParserTest < Minitest::Test
     assert_equal [:asc], s.orders[0].options
     assert_instance_of SQLPP::AST::SortKey, s.orders[1]
     assert_equal [:desc, "nulls last"], s.orders[1].options
+  end
+
+  def test_accepts_select_distinct
+    s = _parser("select distinct * from x").parse_select
+    assert_instance_of SQLPP::AST::Select, s
+    assert_equal s.distinct, true
   end
 
   def test_parse_should_recognize_select
