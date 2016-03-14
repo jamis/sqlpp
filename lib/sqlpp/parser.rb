@@ -6,6 +6,8 @@ require 'sqlpp/ast'
 #             optional_wheres
 #             optional_groups
 #             optional_orders
+#             optional_limit
+#             optional_offset
 #
 # optional_distinct := ''
 #                    | 'DISTINCT'
@@ -24,6 +26,12 @@ require 'sqlpp/ast'
 #
 # optional_orders := ''
 #                  | 'ORDER' 'BY' sort_keys
+#
+# optional_limit := ''
+#                 | 'LIMIT' expr4
+#
+# optional_offset := ''
+#                  | 'OFFSET' expr4
 #
 # sort_keys := sort_key
 #            | sort_key ',' sort_keys
@@ -217,6 +225,22 @@ module SQLPP
         end
 
         select.orders = list
+      end
+
+      if _eat(:key, :limit)
+        _eat :space
+        atom = _parse_atom
+        _eat :space
+
+        select.limit = AST::Limit.new(atom)
+      end
+
+      if _eat(:key, :offset)
+        _eat :space
+        atom = _parse_atom
+        _eat :space
+
+        select.offset = AST::Offset.new(atom)
       end
 
       select

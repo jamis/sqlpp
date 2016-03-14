@@ -34,9 +34,11 @@ module SQLPP
       last
       left
       like
+      limit
       not
       null
       nulls
+      offset
       on
       or
       order

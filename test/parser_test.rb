@@ -293,6 +293,22 @@ class ParserTest < Minitest::Test
     assert_instance_of SQLPP::AST::Select, s
   end
 
+  def test_accepts_select_with_limit
+    s = _parser("select * from x limit 5").parse_select
+    assert_instance_of SQLPP::AST::Limit, s.limit
+    assert_instance_of SQLPP::AST::Atom, s.limit.expr
+    assert_equal :lit, s.limit.expr.type
+    assert_equal "5", s.limit.expr.left
+  end
+
+  def test_accepts_select_with_offset
+    s = _parser("select * from x offset 5").parse_select
+    assert_instance_of SQLPP::AST::Offset, s.offset
+    assert_instance_of SQLPP::AST::Atom, s.offset.expr
+    assert_equal :lit, s.offset.expr.type
+    assert_equal "5", s.offset.expr.left
+  end
+
   def _parser(string)
     SQLPP::Parser.new(string)
   end

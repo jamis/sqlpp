@@ -55,6 +55,19 @@ module SQLPP
         output << "\n"
       end
 
+      if node.limit || node.offset
+        output << _indent
+
+        if node.limit
+          output << format(node.limit)
+          output << " " if node.offset
+        end
+
+        output << format(node.offset) if node.offset
+
+        output << "\n"
+      end
+
       @indent -= 2
       @indent = nil if @indent < 0
 
@@ -155,6 +168,14 @@ module SQLPP
       end
 
       output
+    end
+
+    def _format_Limit(node)
+      "LIMIT #{format(node.expr)}"
+    end
+
+    def _format_Offset(node)
+      "OFFSET #{format(node.expr)}"
     end
 
     def _format_String(string)

@@ -58,6 +58,33 @@ FROM foo
     SQL
   end
 
+  def test_format_limit
+    ast = _parser("select * from foo limit 5").parse
+    assert_equal <<-SQL, _format(ast)
+SELECT *
+FROM foo
+LIMIT 5
+    SQL
+  end
+
+  def test_format_offset
+    ast = _parser("select * from foo offset 5").parse
+    assert_equal <<-SQL, _format(ast)
+SELECT *
+FROM foo
+OFFSET 5
+    SQL
+  end
+
+  def test_format_limit_and_offset
+    ast = _parser("select * from foo limit 10 offset 5").parse
+    assert_equal <<-SQL, _format(ast)
+SELECT *
+FROM foo
+LIMIT 10 OFFSET 5
+    SQL
+  end
+
   def _parser(string)
     SQLPP::Parser.new(string)
   end

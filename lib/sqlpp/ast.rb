@@ -1,6 +1,6 @@
 module SQLPP
   module AST
-    class Select < Struct.new(:projections, :froms, :wheres, :groups, :orders, :distinct)
+    class Select < Struct.new(:projections, :froms, :wheres, :groups, :orders, :distinct, :limit, :offset)
     end
 
     class Expr < Struct.new(:left, :op, :right)
@@ -25,6 +25,12 @@ module SQLPP
     end
 
     class SortKey < Struct.new(:key, :options)
+    end
+
+    class Limit < Struct.new(:expr)
+    end
+
+    class Offset < Struct.new(:expr)
     end
   end
 end
