@@ -164,7 +164,7 @@ module SQLPP
 
       if node.options.any?
         output << " "
-        output << node.options.map { |opt| opt.upcase }.join(", ")
+        output << node.options.map { |opt| opt.upcase }.join(" ")
       end
 
       output
