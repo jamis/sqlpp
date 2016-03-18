@@ -85,6 +85,7 @@ module SQLPP
           output << " "
         end
 
+        output << "NOT " if node.not
         output << op << " "
         output << format(node.right)
       end

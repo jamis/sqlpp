@@ -65,10 +65,14 @@ require 'sqlpp/ast'
 #
 # op := 'AND' | 'OR' | 'IS' | 'IS NOT'
 #
-# expr2 := expr3
-#        | expr3 'BETWEEN' expr3 AND expr3
-#        | expr3 'IN' '(' list ')'
-#        | expr3 bop expr3
+# expr2 := expr3 optional_op
+#
+# optional_op := ''
+#              | 'NOT' optional_op
+#              | 'BETWEEN' expr3 AND expr3
+#              | 'NOT IN' '(' list ')'
+#              | 'IN' '(' list ')'
+#              | bop expr3
 #
 # bop := '<' | '<=' | '<>' | '=' | '>=' | '>'
 #
@@ -338,6 +342,9 @@ module SQLPP
       left = _parse_expr3
       _eat :space
 
+      not_kw = _eat(:key, :not)
+      _eat :space if not_kw
+
       if (op = _eat(:key, :between))
         op = op.text
 
@@ -368,7 +375,9 @@ module SQLPP
       end
 
       if right
-        AST::Expr.new(left, op, right)
+        AST::Expr.new(left, op, right, not_kw != nil)
+      elsif not_kw
+        raise UnexpectedToken, "got #{not_kw.inspect}"
       else
         left
       end

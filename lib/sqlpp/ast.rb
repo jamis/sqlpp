@@ -3,7 +3,7 @@ module SQLPP
     class Select < Struct.new(:projections, :froms, :wheres, :groups, :orders, :distinct, :limit, :offset)
     end
 
-    class Expr < Struct.new(:left, :op, :right)
+    class Expr < Struct.new(:left, :op, :right, :not)
     end
 
     class Unary < Struct.new(:op, :expr)

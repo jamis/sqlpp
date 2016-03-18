@@ -309,6 +309,11 @@ class ParserTest < Minitest::Test
     assert_equal "5", s.offset.expr.left
   end
 
+  def test_accepts_not_in_syntax
+    s = _parser("select * from x where x.id not in (5)").parse_select
+    assert s.wheres.not
+  end
+
   def _parser(string)
     SQLPP::Parser.new(string)
   end

@@ -85,6 +85,15 @@ LIMIT 10 OFFSET 5
     SQL
   end
 
+  def test_format_NOT_expr
+    ast = _parser("select * from foo where x not in (5, 6)").parse
+    assert_equal <<-SQL, _format(ast)
+SELECT *
+FROM foo
+WHERE x NOT IN (5, 6)
+    SQL
+  end
+
   def _parser(string)
     SQLPP::Parser.new(string)
   end
