@@ -94,6 +94,14 @@ WHERE x NOT IN (5, 6)
     SQL
   end
 
+  def test_subscript_in_expr
+    ast = _parser("select (array_agg(x))[0] from foo").parse
+    assert_equal <<-SQL, _format(ast)
+SELECT (array_agg(x))[0]
+FROM foo
+    SQL
+  end
+
   def _parser(string)
     SQLPP::Parser.new(string)
   end

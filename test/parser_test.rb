@@ -314,6 +314,17 @@ class ParserTest < Minitest::Test
     assert s.wheres.not
   end
 
+  def test_accepts_array_subscript_in_expression
+    expr = _parser("a[5]").parse_expression
+    assert_instance_of SQLPP::AST::Subscript, expr
+    assert_instance_of SQLPP::AST::Atom, expr.left
+    assert_instance_of SQLPP::AST::Atom, expr.right
+    assert_equal :attr, expr.left.type
+    assert_equal "a", expr.left.left
+    assert_equal :lit, expr.right.type
+    assert_equal "5", expr.right.left
+  end
+
   def _parser(string)
     SQLPP::Parser.new(string)
   end

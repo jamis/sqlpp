@@ -87,7 +87,7 @@ module SQLPP
         Token.new(:id, id, pos)
       elsif (punct = @scanner.scan(/<=|<>|!=|>=/))
         Token.new(:punct, punct, pos)
-      elsif (punct = @scanner.scan(/[<>=\(\).*,\/+\-]/))
+      elsif (punct = @scanner.scan(/[<>=\(\).*,\/+\-\[\]]/))
         Token.new(:punct, punct, pos)
       elsif (delim = @scanner.scan(/["`]/))
         contents = _scan_to_delim(delim, pos)

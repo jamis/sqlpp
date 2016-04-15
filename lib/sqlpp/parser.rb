@@ -90,6 +90,7 @@ require 'sqlpp/ast'
 #        | id '(' args ')'
 #        | 'CASE' case_stmt 'END'
 #        | '(' expr1 ')'
+#        | expr4 '[' expr1 ']'
 #
 # list := expr1
 #       | expr1 ',' list
@@ -394,6 +395,15 @@ module SQLPP
         atom = _parse_atom
         _eat :space
 
+        if _eat(:punct, "[")
+          subscript = _parse_expr1
+          _eat :space
+          _expect(:punct, "]")
+          _eat :space
+
+          atom = AST::Subscript.new(atom, subscript)
+        end
+
         if (op = _eat(:punct, /[-+*\/]/))
           _eat :space
           AST::Expr.new(atom, op.text, _parse_expr3)
@@ -407,7 +417,7 @@ module SQLPP
       if (lit = _eat(:lit))
         AST::Atom.new(:lit, lit.text)
 
-      elsif (key = _eat(:key, :case))
+      elsif _eat(:key, :case)
         _parse_case
 
       elsif _eat(:punct, "(")

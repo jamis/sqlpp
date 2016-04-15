@@ -32,5 +32,8 @@ module SQLPP
 
     class Offset < Struct.new(:expr)
     end
+
+    class Subscript < Struct.new(:left, :right)
+    end
   end
 end

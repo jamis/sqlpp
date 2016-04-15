@@ -183,6 +183,13 @@ module SQLPP
       string
     end
 
+    def _format_Subscript(node)
+      output = ""
+      output << format(node.left)
+      output << "[" << format(node.right) << "]"
+      output
+    end
+
     def _indent
       " " * (@indent || 0)
     end
