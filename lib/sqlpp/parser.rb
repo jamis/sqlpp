@@ -498,6 +498,7 @@ module SQLPP
     def _parse_list
       _eat :space
       args = []
+      return args if _peek(:punct, ')')
 
       loop do
         args << _parse_expr1

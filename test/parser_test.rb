@@ -336,6 +336,14 @@ class ParserTest < Minitest::Test
     assert_equal "INTERVAL", expr.type.left
   end
 
+  def test_accept_empty_parameter_list
+    expr = _parser("NOW()").parse_expression
+    assert_instance_of SQLPP::AST::Atom, expr
+    assert_equal :func, expr.type
+    assert_equal "NOW", expr.left
+    assert_equal 0, expr.right.count
+  end
+
   def _parser(string)
     SQLPP::Parser.new(string)
   end
