@@ -190,6 +190,10 @@ module SQLPP
       output
     end
 
+    def _format_TypeCast(node)
+      format(node.value) << '::' << format(node.type)
+    end
+
     def _indent
       " " * (@indent || 0)
     end

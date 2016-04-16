@@ -94,10 +94,18 @@ WHERE x NOT IN (5, 6)
     SQL
   end
 
-  def test_subscript_in_expr
+  def test_format_subscript_in_expr
     ast = _parser("select (array_agg(x))[0] from foo").parse
     assert_equal <<-SQL, _format(ast)
 SELECT (array_agg(x))[0]
+FROM foo
+    SQL
+  end
+
+  def test_format_double_colon_typecast
+    ast = _parser("select 'month'::interval from foo").parse
+    assert_equal <<-SQL, _format(ast)
+SELECT 'month'::interval
 FROM foo
     SQL
   end

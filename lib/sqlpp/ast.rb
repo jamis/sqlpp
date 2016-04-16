@@ -35,5 +35,8 @@ module SQLPP
 
     class Subscript < Struct.new(:left, :right)
     end
+
+    class TypeCast < Struct.new(:value, :type)
+    end
   end
 end

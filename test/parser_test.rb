@@ -325,6 +325,17 @@ class ParserTest < Minitest::Test
     assert_equal "5", expr.right.left
   end
 
+  def test_accepts_double_colon_as_typecast
+    expr = _parser("'month'::INTERVAL").parse_expression
+    assert_instance_of SQLPP::AST::TypeCast, expr
+    assert_instance_of SQLPP::AST::Atom, expr.value
+    assert_instance_of SQLPP::AST::Atom, expr.type
+    assert_equal :lit, expr.value.type
+    assert_equal "'month'", expr.value.left
+    assert_equal :attr, expr.type.type
+    assert_equal "INTERVAL", expr.type.left
+  end
+
   def _parser(string)
     SQLPP::Parser.new(string)
   end
